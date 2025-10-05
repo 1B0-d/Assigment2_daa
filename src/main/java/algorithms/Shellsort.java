@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ShellSort {
+public class Shellsort {
 
     public enum GapSeq { SHELL, KNUTH, SEDGEWICK }
 
