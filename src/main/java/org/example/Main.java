@@ -1,17 +1,28 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import algorithms.ShellSort;
+import algorithms.ShellSort.GapSeq;
+import metrics.PerformanceTracker;
+import java.util.Arrays;
+import java.util.Random;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        int n = 1000; // размер массива
+        int[] original = new Random().ints(n, 0, 10000).toArray();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        for (GapSeq seq : GapSeq.values()) {
+            int[] arr = Arrays.copyOf(original, original.length);
+            PerformanceTracker pt = new PerformanceTracker();
+
+            long start = System.nanoTime();
+            ShellSort.sort(arr, seq, pt);
+            long end = System.nanoTime();
+
+            double timeMs = (end - start) / 1_000_000.0;
+
+            System.out.printf("%-10s | Comparisons: %6d | Swaps: %6d | Accesses: %6d | Time: %.3f ms%n",
+                    seq, pt.comparisons, pt.swaps, pt.accesses, timeMs);
         }
     }
 }
