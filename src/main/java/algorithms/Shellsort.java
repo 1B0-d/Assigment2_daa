@@ -19,7 +19,7 @@ public class Shellsort {
                 int h = 1;
                 while (h < n) { g.add(0, h); h = 3*h + 1; }
             }
-            case SEDGEWICK -> { // 1, 5, 19, 41, 109, ... (через две формулы)
+            case SEDGEWICK -> {
                 int k = 0; int h;
                 while (true) {
                     int a = (int)(Math.pow(4, k) + 3*Math.pow(2, k-1) + 1); // k>=1
@@ -37,24 +37,28 @@ public class Shellsort {
         return g;
     }
 
+
     public static void sort(int[] a, GapSeq seq, PerformanceTracker pt) {
         Objects.requireNonNull(a, "array");
         if (pt == null) pt = new PerformanceTracker();
-        List<Integer> H = gaps(a.length, seq);
-
-        for (int gap : H) {
+        for (int gap : gaps(a.length, seq)) {
             for (int i = gap; i < a.length; i++) {
-                pt.accesses++; int temp = a[i];
+                pt.accesses++; // read a[i]
+                int temp = a[i];
                 int j = i;
+
                 while (j >= gap) {
                     pt.comparisons++;
-                    pt.accesses += 2; // a[j-gap], temp
+                    pt.accesses += 1;
                     if (a[j - gap] <= temp) break;
-                    a[j] = a[j - gap]; pt.swaps++; pt.accesses += 2; // write
+                    pt.accesses += 1;
+                    a[j] = a[j - gap];
+                    pt.swaps++;
                     j -= gap;
                 }
-                if (j != i) { a[j] = temp; pt.accesses++; }
+                if (j != i) { pt.accesses++; a[j] = temp; }
             }
         }
     }
+
 }
