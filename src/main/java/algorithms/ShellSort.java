@@ -19,7 +19,11 @@ public class ShellSort {
                 int h = 1;
                 while (h < n) { g.add(0, h); h = 3*h + 1; }
             }
+
+            case SEDGEWICK -> { // 1, 5, 19, 41, 109, ... (через две формулы)
+
             case SEDGEWICK -> {
+
                 int k = 0; int h;
                 while (true) {
                     int a = (int)(Math.pow(4, k) + 3*Math.pow(2, k-1) + 1); // k>=1
@@ -41,24 +45,54 @@ public class ShellSort {
     public static void sort(int[] a, GapSeq seq, PerformanceTracker pt) {
         Objects.requireNonNull(a, "array");
         if (pt == null) pt = new PerformanceTracker();
-        for (int gap : gaps(a.length, seq)) {
-            for (int i = gap; i < a.length; i++) {
-                pt.accesses++; // read a[i]
-                int temp = a[i];
-                int j = i;
+        List<Integer> H = gaps(a.length, seq);
 
+        for (int gap : H) {
+            for (int i = gap; i < a.length; i++) {
+                pt.accesses++; int temp = a[i];
+                int j = i;
                 while (j >= gap) {
                     pt.comparisons++;
-                    pt.accesses += 1;
+                    pt.accesses += 2; // a[j-gap], temp
                     if (a[j - gap] <= temp) break;
-                    pt.accesses += 1;
-                    a[j] = a[j - gap];
-                    pt.swaps++;
+                    a[j] = a[j - gap]; pt.swaps++; pt.accesses += 2; // write
                     j -= gap;
                 }
-                if (j != i) { pt.accesses++; a[j] = temp; }
+                if (j != i) { a[j] = temp; pt.accesses++; }
             }
         }
     }
+
+    public static void sort(int[] a, GapSeq seq, PerformanceTracker pt) {
+    Objects.requireNonNull(a, "array");
+    if (pt == null) pt = new PerformanceTracker();
+
+    List<Integer> H = gaps(a.length, seq);
+
+    for (int gap : H) {
+        for (int i = gap; i < a.length; i++) {
+            pt.accesses++;           
+            int temp = a[i];
+            int j = i;
+
+            while (j >= gap) {
+                pt.comparisons++;
+                pt.accesses++;        
+                if (a[j - gap] <= temp) break;
+
+                a[j] = a[j - gap];    
+                pt.swaps++;
+                pt.accesses++;       
+                j -= gap;
+            }
+            if (j != i) {            
+                a[j] = temp;
+                pt.accesses++;        
+            }
+        }
+    }
+}
+
+
 
 }
