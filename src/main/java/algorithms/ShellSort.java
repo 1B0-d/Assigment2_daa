@@ -20,7 +20,7 @@ public class ShellSort {
                 while (h < n) { g.add(0, h); h = 3*h + 1; }
             }
 
-            case SEDGEWICK -> { // 1, 5, 19, 41, 109, ... (через две формулы)
+            case SEDGEWICK -> { 
 
             case SEDGEWICK -> {
 
